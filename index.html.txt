@@ -3,59 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>科隆島熱帶冒險 App</title>
+    <title>科隆島熱帶冒險</title>
     
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
+    <!-- 使用 Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Phosphor Icons - 輕量且穩定) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Noto Sans TC', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Noto Sans TC', 'sans-serif'] },
                     colors: {
-                        ocean: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        sand: '#fdfbf7',
+                        ocean: { 50:'#f0f9ff', 100:'#e0f2fe', 200:'#bae6fd', 300:'#7dd3fc', 400:'#38bdf8', 500:'#0ea5e9', 600:'#0284c7', 700:'#0369a1', 800:'#075985', 900:'#0c4a6e' },
                     },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'wave': 'wave 25s linear infinite',
-                    },
+                    animation: { 'wave': 'wave 25s linear infinite' },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        wave: {
-                            '0%': { transform: 'translateX(0)' },
-                            '100%': { transform: 'translateX(-50%)' },
-                        }
+                        wave: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } }
                     }
                 }
             }
@@ -63,498 +32,399 @@
     </script>
 
     <style>
-        body {
-            background-color: #0ea5e9;
-            color: #0f172a;
-            -webkit-tap-highlight-color: transparent;
-            overflow: hidden; /* App-like: no body scroll */
-        }
+        body { background-color: #0ea5e9; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
-        .glass-header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        /* 毛玻璃效果類別 */
+        .glass-header { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5); }
+        .glass-card-dark { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); color: white; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-        
-        .glass-card-dark {
-             background: rgba(15, 23, 42, 0.6);
-             backdrop-filter: blur(12px);
-             color: white;
-        }
-
-        /* Hide Scrollbar but keep functionality */
+        /* 隱藏滾動條 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .wave-bg {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            height: 50vh;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.15' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: repeat-x;
-            background-size: 50% 100%;
-            z-index: -1;
-        }
+        /* 滑動容器設定 */
+        .snap-container { scroll-snap-type: x mandatory; overflow-x: auto; overflow-y: hidden; display: flex; height: 100%; width: 100%; scroll-behavior: smooth; }
+        .snap-item { scroll-snap-align: center; flex: 0 0 100%; width: 100%; overflow-y: auto; height: 100%; position: relative; }
 
-        /* Swipe Snap */
-        .snap-container {
-            scroll-snap-type: x mandatory;
-        }
-        .snap-item {
-            scroll-snap-align: center;
-        }
+        /* 背景波浪 */
+        .wave-bg { position: fixed; bottom: 0; left: 0; width: 200%; height: 50vh; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.15' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); background-repeat: repeat-x; background-size: 50% 100%; z-index: -1; pointer-events: none; }
+
+        /* Modal 動畫 */
+        .modal-enter { animation: modalUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes modalUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="text-slate-800 h-screen flex flex-col">
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-        const { MapPin, Clock, CloudSun, Calendar, Edit2, Plus, Trash2, ArrowUp, ArrowDown, X, Navigation, Coffee, Utensils, Waves, Camera, BedDouble, Plane, Music, Anchor } = lucide;
+    <!-- 背景 -->
+    <div class="fixed inset-0 bg-gradient-to-b from-ocean-400 to-ocean-600 -z-20"></div>
+    <div class="wave-bg animate-wave"></div>
 
-        // --- 初始資料 (根據您的 PDF) ---
-        const initialData = [
+    <!-- 頂部資訊列 -->
+    <header class="glass-header pt-12 pb-3 px-5 text-white flex justify-between items-end z-20 shrink-0">
+        <div>
+            <div class="flex items-center gap-1 opacity-90 mb-0.5">
+                <i class="ph ph-airplane-tilt text-sm"></i>
+                <span class="text-[10px] tracking-widest font-bold uppercase">CORON TRIP</span>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">科隆冒險</h1>
+        </div>
+        <div class="text-right">
+            <div id="clock" class="text-2xl font-light font-mono leading-none">--:--</div>
+            <div class="text-xs text-ocean-100 mt-1 flex items-center justify-end gap-1">
+                <i class="ph ph-sun"></i> <span id="weather-text">晴 29°C</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 日期導航 -->
+    <div id="tabs-container" class="bg-ocean-600/30 backdrop-blur-sm pt-2 pb-2 px-2 flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-20">
+        <!-- Tabs will be injected here -->
+    </div>
+
+    <!-- 主要內容區 (可左右滑動) -->
+    <div id="main-container" class="snap-container no-scrollbar flex-1">
+        <!-- Days will be injected here -->
+    </div>
+
+    <!-- 新增按鈕 -->
+    <button onclick="openEditModal()" class="fixed bottom-8 right-6 w-14 h-14 bg-gradient-to-r from-ocean-500 to-ocean-400 text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-30 border-4 border-white/20">
+        <i class="ph ph-plus text-2xl font-bold"></i>
+    </button>
+
+    <!-- 編輯/新增 視窗 (Modal) -->
+    <div id="edit-modal" class="hidden fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onclick="closeEditModal()"></div>
+        <div class="relative w-full max-w-sm bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden modal-enter">
+            <div class="bg-ocean-500 p-4 text-white flex justify-between items-center">
+                <h3 id="modal-title" class="text-lg font-bold">新增行程</h3>
+                <button onclick="closeEditModal()" class="p-1 rounded-full hover:bg-white/20"><i class="ph ph-x text-xl"></i></button>
+            </div>
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <input type="hidden" id="edit-day-idx">
+                <input type="hidden" id="edit-act-idx">
+                
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="col-span-1">
+                        <label class="text-xs font-bold text-gray-400">時間</label>
+                        <input type="time" id="edit-time" class="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-2 text-center font-bold text-lg">
+                    </div>
+                    <div class="col-span-3">
+                        <label class="text-xs font-bold text-gray-400">名稱</label>
+                        <input type="text" id="edit-title" class="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-2.5 font-bold" placeholder="行程名稱">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-400 mb-1 block">類型</label>
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="type-selector">
+                        <!-- Type buttons injected by JS -->
+                    </div>
+                    <input type="hidden" id="edit-type">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-400">備註</label>
+                    <textarea id="edit-note" rows="2" class="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm" placeholder="備註資訊..."></textarea>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-400">地點 (Google Map)</label>
+                    <div class="relative">
+                        <i class="ph ph-map-pin absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="edit-location" class="w-full mt-1 pl-9 bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-sm" placeholder="輸入地點名稱">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button id="btn-delete" onclick="deleteCurrentItem()" class="hidden p-3 rounded-xl bg-red-50 text-red-500 font-bold"><i class="ph ph-trash text-lg"></i></button>
+                    <button onclick="saveItem()" class="flex-1 py-3 bg-ocean-500 hover:bg-ocean-600 text-white rounded-xl font-bold shadow-lg shadow-ocean-200/50">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 核心資料 ---
+        const defaultData = [
             {
-                id: 'day1',
-                date: '10/3',
-                weekday: '週五',
-                title: '抵達與市區探索',
-                weather: '晴 29°C',
+                id: 'day1', date: '10/3', weekday: '週五', title: '抵達與市區探索', weather: '晴 29°C',
                 activities: [
-                    { id: 101, time: '08:30', title: '抵達 USU 機場', type: 'transport', note: '環境稅200P，接送500P', location: 'Francisco B. Reyes Airport' },
-                    { id: 102, time: '09:30', title: '飯店 Check-in', type: 'hotel', note: 'MO2 Westown Lagoon', location: 'MO2 Westown Lagoon' },
-                    { id: 103, time: '10:00', title: 'Deyo Cafe 早午餐', type: 'food', note: '放鬆享用第一餐', location: 'Deyo Cafe Coron' },
-                    { id: 104, time: '12:00', title: 'Booms Eatery', type: 'food', note: '午餐：必吃烤豬排', location: 'Booms Eatery' },
-                    { id: 105, time: '13:00', title: 'Mathew\'s Crepe', type: 'food', note: '甜點時間', location: 'Mathew\'s island Crepe' },
-                    { id: 106, time: '16:30', title: '十字架山夕陽', type: 'view', note: '爬700階看全景', location: 'Mt. Tapyas' },
-                    { id: 107, time: '18:30', title: 'Maquinit 海水溫泉', type: 'relax', note: '門票300P，嘟嘟車500P', location: 'Maquinit Hot Spring' },
-                    { id: 108, time: '20:00', title: 'Gavin\'s Kitchen', type: 'food', note: '晚餐：Ribs, 海鮮拼盤', location: 'Gavin\'s Kitchen + Bar' },
-                    { id: 109, time: '22:00', title: 'Kalipay Spa', type: 'relax', note: '按摩放鬆', location: 'Kalipay Spa Coron' },
+                    { time: '08:30', title: '抵達 USU 機場', type: 'transport', note: '環境稅200P，接送500P', location: 'Francisco B. Reyes Airport' },
+                    { time: '09:30', title: 'Check-in 飯店', type: 'hotel', note: 'MO2 Westown Lagoon', location: 'MO2 Westown Lagoon' },
+                    { time: '10:00', title: 'Deyo Cafe 早午餐', type: 'food', note: '放鬆享用第一餐', location: 'Deyo Cafe Coron' },
+                    { time: '12:00', title: 'Booms Eatery', type: 'food', note: '午餐：必吃烤豬排', location: 'Booms Eatery' },
+                    { time: '16:30', title: '十字架山夕陽', type: 'view', note: '爬700階看全景', location: 'Mt. Tapyas' },
+                    { time: '18:30', title: 'Maquinit 海水溫泉', type: 'relax', note: '門票300P', location: 'Maquinit Hot Spring' },
+                    { time: '20:00', title: 'Gavin\'s Kitchen', type: 'food', note: '晚餐：Ribs, 海鮮', location: 'Gavin\'s Kitchen + Bar' },
+                    { time: '22:00', title: 'Kalipay Spa', type: 'relax', note: '按摩放鬆', location: 'Kalipay Spa Coron' }
                 ]
             },
             {
-                id: 'day2',
-                date: '10/4',
-                weekday: '週六',
-                title: '經典跳島 A',
-                weather: '烈日 31°C',
+                id: 'day2', date: '10/4', weekday: '週六', title: '經典跳島 A', weather: '烈日 31°C',
                 activities: [
-                    { id: 201, time: '08:00', title: '出海接送', type: 'boat', note: '準備出發！每人約2600P', location: 'Coron Port' },
-                    { id: 202, time: '09:00', title: 'Kayangan Lake', type: 'view', note: '國湖，必拍景點', location: 'Kayangan Lake' },
-                    { id: 203, time: '10:30', title: 'Twin Lagoon', type: 'water', note: '雙子湖 冷熱交替水域', location: 'Twin Lagoon' },
-                    { id: 204, time: '12:30', title: '跳島午餐', type: 'food', note: '沙灘 BBQ', location: '' },
-                    { id: 205, time: '14:00', title: 'Siete Pecados', type: 'water', note: '七子礁岩浮潛', location: 'Siete Pecados' },
-                    { id: 206, time: '19:00', title: 'El Kuvo', type: 'food', note: '晚餐：菲式料理', location: 'El Kuvo' },
-                    { id: 207, time: '22:00', title: 'Bam Bar', type: 'activity', note: 'Live Band 現場演奏', location: 'Bam Bar' },
+                    { time: '08:00', title: '出海接送', type: 'boat', note: '每人約2600P', location: 'Coron Port' },
+                    { time: '09:00', title: 'Kayangan Lake', type: 'view', note: '國湖，必拍景點', location: 'Kayangan Lake' },
+                    { time: '10:30', title: 'Twin Lagoon', type: 'water', note: '雙子湖', location: 'Twin Lagoon' },
+                    { time: '12:30', title: '跳島午餐', type: 'food', note: '沙灘 BBQ', location: '' },
+                    { time: '14:00', title: 'Siete Pecados', type: 'water', note: '七子礁岩浮潛', location: 'Siete Pecados' },
+                    { time: '19:00', title: 'El Kuvo', type: 'food', note: '晚餐：菲式料理', location: 'El Kuvo' },
+                    { time: '22:00', title: 'Bam Bar', type: 'activity', note: 'Live Band', location: 'Bam Bar' }
                 ]
             },
             {
-                id: 'day3',
-                date: '10/5',
-                weekday: '週日',
-                title: '遠程跳島 B',
-                weather: '晴時多雲 30°C',
+                id: 'day3', date: '10/5', weekday: '週日', title: '遠程跳島 B', weather: '晴時多雲 30°C',
                 activities: [
-                    { id: 301, time: '08:00', title: '出海接送', type: 'boat', note: '較遠船程，每人約2950P', location: 'Coron Port' },
-                    { id: 302, time: '10:00', title: 'Malcapuya Island', type: 'view', note: '純白沙灘，絕美海景', location: 'Malcapuya Island' },
-                    { id: 303, time: '12:00', title: 'Banana Island', type: 'view', note: '午餐與休憩', location: 'Banana Island' },
-                    { id: 304, time: '14:00', title: 'Waling Waling', type: 'water', note: '著名的沙洲', location: 'Waling Waling Island' },
-                    { id: 305, time: '19:00', title: 'Umamikusina', type: 'food', note: '晚餐：Pork Sisig, Curry Fish', location: 'Umamikusina' },
-                    { id: 306, time: '21:00', title: 'Kalipay Spa', type: 'relax', note: '再次按摩', location: 'Kalipay Spa Coron' },
+                    { time: '08:00', title: '出海接送', type: 'boat', note: '每人約2950P', location: 'Coron Port' },
+                    { time: '10:00', title: 'Malcapuya Island', type: 'view', note: '絕美白沙灘', location: 'Malcapuya Island' },
+                    { time: '12:00', title: 'Banana Island', type: 'view', note: '午餐與休憩', location: 'Banana Island' },
+                    { time: '19:00', title: 'Umamikusina', type: 'food', note: '晚餐：Pork Sisig', location: 'Umamikusina' },
+                    { time: '21:00', title: 'Kalipay Spa', type: 'relax', note: '再次按摩', location: 'Kalipay Spa Coron' }
                 ]
             },
             {
-                id: 'day4',
-                date: '10/6',
-                weekday: '週一',
-                title: '放鬆與返程',
-                weather: '晴 29°C',
+                id: 'day4', date: '10/6', weekday: '週一', title: '放鬆與返程', weather: '晴 29°C',
                 activities: [
-                    { id: 401, time: '09:00', title: '飯店玩水', type: 'relax', note: '享受最後泳池時光', location: 'MO2 Westown Lagoon' },
-                    { id: 402, time: '10:30', title: '射擊場活動', type: 'activity', note: '體驗實彈射擊 (視情況)', location: 'Coron Shooting Range' },
-                    { id: 403, time: '12:00', title: 'Poco Deli', type: 'food', note: '午餐：Pizza, Pasta (勿點海鮮Pizza)', location: 'Poco Deli Coron' },
-                    { id: 404, time: '15:00', title: '前往機場', type: 'transport', note: '再見科隆！', location: 'Francisco B. Reyes Airport' },
-                    { id: 405, time: '18:30', title: '轉機晚餐', type: 'food', note: 'Las Flores (馬尼拉機場)', location: 'Las Flores Manila' },
-                    { id: 406, time: '22:40', title: '搭機返台', type: 'transport', note: 'CebuAir 5J310', location: 'Ninoy Aquino International Airport' },
+                    { time: '09:00', title: '飯店玩水', type: 'relax', note: '最後泳池時光', location: 'MO2 Westown Lagoon' },
+                    { time: '12:00', title: 'Poco Deli', type: 'food', note: 'Pizza, Pasta', location: 'Poco Deli Coron' },
+                    { time: '15:00', title: '前往機場', type: 'transport', note: '前往 USU 機場', location: 'Francisco B. Reyes Airport' },
+                    { time: '18:30', title: '轉機晚餐', type: 'food', note: 'Las Flores (MNL)', location: 'Las Flores Manila' },
+                    { time: '22:40', title: '搭機返台', type: 'transport', note: '5J310', location: 'Ninoy Aquino International Airport' }
                 ]
             }
         ];
 
-        // --- Icon Mapping ---
-        const getIcon = (type) => {
-            switch(type) {
-                case 'food': return <Utensils size={18} />;
-                case 'view': return <Camera size={18} />;
-                case 'water': return <Waves size={18} />;
-                case 'hotel': return <BedDouble size={18} />;
-                case 'transport': return <Plane size={18} />;
-                case 'boat': return <Anchor size={18} />;
-                case 'activity': return <Music size={18} />;
-                case 'relax': return <Coffee size={18} />;
-                default: return <MapPin size={18} />;
-            }
-        };
+        let schedule = [];
+        let activeDayIdx = 0;
 
-        const getTypeColor = (type) => {
-             switch(type) {
-                case 'food': return 'bg-orange-100 text-orange-600';
-                case 'view': return 'bg-emerald-100 text-emerald-600';
-                case 'water': return 'bg-cyan-100 text-cyan-600';
-                case 'hotel': return 'bg-violet-100 text-violet-600';
-                case 'transport': return 'bg-slate-200 text-slate-600';
-                case 'boat': return 'bg-blue-100 text-blue-600';
-                case 'relax': return 'bg-rose-100 text-rose-600';
-                default: return 'bg-gray-100 text-gray-600';
-            }
-        };
+        // --- 初始化 ---
+        function init() {
+            // Load Data
+            const saved = localStorage.getItem('coron_lite_v1');
+            schedule = saved ? JSON.parse(saved) : defaultData;
 
-        // --- Components ---
-
-        const Modal = ({ isOpen, onClose, children }) => {
-            if (!isOpen) return null;
-            return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
-                    <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden animate-float-up">
-                        {children}
-                    </div>
-                </div>
-            );
-        };
-
-        const App = () => {
-            const [schedule, setSchedule] = useState(initialData);
-            const [activeDayIdx, setActiveDayIdx] = useState(0);
-            const [currentTime, setCurrentTime] = useState(new Date());
-            const [editMode, setEditMode] = useState(false);
-            const [editingItem, setEditingItem] = useState(null); // { dayIdx, actIdx, data }
-            const scrollRef = useRef(null);
-
-            // Load & Save
-            useEffect(() => {
-                const saved = localStorage.getItem('coronApp_v2');
-                if (saved) setSchedule(JSON.parse(saved));
-            }, []);
-            useEffect(() => {
-                localStorage.setItem('coronApp_v2', JSON.stringify(schedule));
-            }, [schedule]);
-
-            // Clock
-            useEffect(() => {
-                const timer = setInterval(() => setCurrentTime(new Date()), 10000);
-                return () => clearInterval(timer);
-            }, []);
-
-            // Scroll Handler
-            const scrollToDay = (idx) => {
-                setActiveDayIdx(idx);
-                setEditMode(false); // Switch day turns off edit mode
-                if (scrollRef.current) {
-                    const width = scrollRef.current.offsetWidth;
-                    scrollRef.current.scrollTo({ left: width * idx, behavior: 'smooth' });
-                }
-            };
+            renderApp();
+            startClock();
             
-            // Handle horizontal scroll snap detection
-            const handleScroll = (e) => {
-                 const width = e.target.offsetWidth;
-                 const scrollLeft = e.target.scrollLeft;
-                 const idx = Math.round(scrollLeft / width);
-                 if (idx !== activeDayIdx && idx >= 0 && idx < schedule.length) {
-                     setActiveDayIdx(idx);
-                     setEditMode(false);
-                 }
-            };
-
-            // Actions
-            const deleteItem = (dayIdx, actIdx) => {
-                if(!confirm("確定刪除此行程？")) return;
-                const newSchedule = [...schedule];
-                newSchedule[dayIdx].activities.splice(actIdx, 1);
-                setSchedule(newSchedule);
-            };
-
-            const moveItem = (dayIdx, actIdx, direction) => {
-                const newSchedule = [...schedule];
-                const list = newSchedule[dayIdx].activities;
-                if (direction === -1 && actIdx > 0) {
-                    [list[actIdx], list[actIdx-1]] = [list[actIdx-1], list[actIdx]];
-                } else if (direction === 1 && actIdx < list.length - 1) {
-                    [list[actIdx], list[actIdx+1]] = [list[actIdx+1], list[actIdx]];
+            // 監聽滑動事件 (Scroll Spy)
+            const container = document.getElementById('main-container');
+            container.addEventListener('scroll', () => {
+                const width = container.offsetWidth;
+                const idx = Math.round(container.scrollLeft / width);
+                if (idx !== activeDayIdx && idx >= 0 && idx < schedule.length) {
+                    activeDayIdx = idx;
+                    updateTabs();
+                    updateWeather();
                 }
-                setSchedule(newSchedule);
-            };
+            });
+        }
 
-            const openGoogleMap = (location) => {
-                if (!location) return;
-                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ' Coron Palawan')}`, '_blank');
-            };
+        // --- 渲染 ---
+        function renderApp() {
+            renderTabs();
+            renderDays();
+            updateWeather();
+        }
 
-            const saveItemEdit = (newItem) => {
-                const newSchedule = [...schedule];
-                if (editingItem.actIdx === -1) {
-                    // Add new
-                    newSchedule[activeDayIdx].activities.push(newItem);
-                    newSchedule[activeDayIdx].activities.sort((a,b) => a.time.localeCompare(b.time));
-                } else {
-                    // Update
-                    newSchedule[activeDayIdx].activities[editingItem.actIdx] = newItem;
-                }
-                setSchedule(newSchedule);
-                setEditingItem(null);
-            };
+        function renderTabs() {
+            const container = document.getElementById('tabs-container');
+            container.innerHTML = schedule.map((day, idx) => `
+                <button onclick="scrollToDay(${idx})" class="tab-btn flex-1 min-w-[80px] py-2 rounded-xl transition-all flex flex-col items-center ${idx === activeDayIdx ? 'bg-white text-ocean-600 shadow-lg scale-100 opacity-100' : 'bg-white/10 text-white scale-95 opacity-70'}">
+                    <span class="text-[10px] uppercase font-bold tracking-wider opacity-80">${day.weekday}</span>
+                    <span class="text-lg font-bold leading-none mt-0.5">${day.date}</span>
+                </button>
+            `).join('');
+        }
 
-            return (
-                <div className="relative h-screen flex flex-col font-sans text-slate-800">
-                    
-                    {/* Background Animation */}
-                    <div className="fixed inset-0 bg-gradient-to-b from-ocean-400 to-ocean-600 -z-20"></div>
-                    <div className="wave-bg animate-wave"></div>
-
-                    {/* Top Bar (Glass) */}
-                    <header className="glass-header pt-12 pb-2 px-5 text-white flex justify-between items-end z-10 shrink-0">
+        function renderDays() {
+            const container = document.getElementById('main-container');
+            container.innerHTML = schedule.map((day, dayIdx) => `
+                <div class="snap-item p-4 pb-24">
+                    <div class="glass-card-dark rounded-2xl p-4 mb-4 flex justify-between items-center">
                         <div>
-                            <div className="flex items-center gap-2 opacity-90 mb-1">
-                                <Calendar size={14} />
-                                <span className="text-xs tracking-wider font-medium uppercase">Travel Itinerary</span>
-                            </div>
-                            <h1 className="text-2xl font-bold tracking-tight">科隆冒險</h1>
+                            <h2 class="text-lg font-bold">${day.title}</h2>
+                            <p class="text-xs text-slate-300 mt-1">${day.activities.length} 個行程</p>
                         </div>
-                        <div className="text-right">
-                            <div className="text-2xl font-light font-mono leading-none">
-                                {currentTime.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12: false})}
-                            </div>
-                            <div className="text-xs text-ocean-100 mt-1 flex items-center justify-end gap-1">
-                                <CloudSun size={12} />
-                                {schedule[activeDayIdx].weather}
+                    </div>
+                    <div class="space-y-3">
+                        ${day.activities.map((act, actIdx) => renderActivityCard(act, dayIdx, actIdx)).join('')}
+                    </div>
+                    <div class="h-20"></div>
+                </div>
+            `).join('');
+        }
+
+        function renderActivityCard(act, dayIdx, actIdx) {
+            const typeConfig = getTypeConfig(act.type);
+            return `
+                <div class="flex gap-3 relative group" onclick="openEditModal(${dayIdx}, ${actIdx})">
+                    <div class="flex flex-col items-center pt-2 w-12 shrink-0">
+                        <span class="text-xs font-bold text-white/90 font-mono">${act.time}</span>
+                        <div class="h-full w-0.5 bg-white/20 my-1 rounded-full"></div>
+                    </div>
+                    <div class="flex-1 glass-card rounded-2xl p-3.5 relative active:scale-95 transition-transform">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center gap-2">
+                                <div class="p-1.5 rounded-lg ${typeConfig.color}">
+                                    <i class="ph ${typeConfig.icon} text-lg"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-800 leading-tight">${act.title}</h3>
                             </div>
                         </div>
-                    </header>
-
-                    {/* Date Tabs */}
-                    <div className="bg-ocean-600/30 backdrop-blur-sm pt-2 pb-2 px-2 flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10">
-                        {schedule.map((day, idx) => (
-                            <button
-                                key={day.id}
-                                onClick={() => scrollToDay(idx)}
-                                className={`flex-1 min-w-[80px] py-2 rounded-xl transition-all duration-300 flex flex-col items-center ${
-                                    idx === activeDayIdx 
-                                    ? 'bg-white text-ocean-600 shadow-lg scale-100 opacity-100' 
-                                    : 'bg-white/10 text-white scale-95 opacity-70 hover:bg-white/20'
-                                }`}
-                            >
-                                <span className="text-[10px] uppercase font-bold tracking-wider opacity-80">{day.weekday}</span>
-                                <span className="text-lg font-bold leading-none mt-0.5">{day.date}</span>
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Main Content (Swipeable) */}
-                    <div 
-                        ref={scrollRef}
-                        onScroll={handleScroll}
-                        className="flex-1 overflow-x-auto overflow-y-hidden snap-container no-scrollbar flex relative"
-                    >
-                        {schedule.map((day, dayIdx) => (
-                            <div key={day.id} className="min-w-full h-full snap-item overflow-y-auto p-4 pb-24 no-scrollbar">
-                                
-                                <div className="glass-card-dark rounded-2xl p-4 mb-4 flex justify-between items-center">
-                                    <div>
-                                        <h2 className="text-lg font-bold">{day.title}</h2>
-                                        <p className="text-xs text-slate-300 mt-1">
-                                            {day.activities.length} 個行程
-                                        </p>
-                                    </div>
-                                    <button 
-                                        onClick={() => setEditMode(!editMode)}
-                                        className={`p-2 rounded-full transition-colors ${editMode ? 'bg-rose-500 text-white' : 'bg-white/10 text-white'}`}
-                                    >
-                                        {editMode ? <X size={18}/> : <Edit2 size={18}/>}
-                                    </button>
-                                </div>
-
-                                <div className="space-y-3">
-                                    {day.activities.map((act, actIdx) => (
-                                        <div 
-                                            key={act.id} 
-                                            className="flex gap-3 relative group"
-                                            onContextMenu={(e) => {e.preventDefault(); setEditMode(true);}}
-                                        >
-                                            {/* Time Column */}
-                                            <div className="flex flex-col items-center pt-2 w-12 shrink-0">
-                                                <span className="text-xs font-bold text-white/90 font-mono">{act.time}</span>
-                                                <div className="h-full w-0.5 bg-white/20 my-1 rounded-full"></div>
-                                            </div>
-
-                                            {/* Card */}
-                                            <div className={`flex-1 glass-card rounded-2xl p-3.5 transition-all relative ${editMode ? 'translate-x-2' : ''}`}>
-                                                
-                                                {/* Header */}
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className={`p-1.5 rounded-lg ${getTypeColor(act.type)}`}>
-                                                            {getIcon(act.type)}
-                                                        </div>
-                                                        <h3 className="font-bold text-slate-800 leading-tight">{act.title}</h3>
-                                                    </div>
-                                                </div>
-
-                                                {/* Note */}
-                                                {act.note && <p className="text-xs text-slate-500 pl-8 mb-2 line-clamp-2">{act.note}</p>}
-
-                                                {/* Footer Actions */}
-                                                {!editMode && act.location && (
-                                                    <div className="flex justify-end mt-1">
-                                                        <button 
-                                                            onClick={() => openGoogleMap(act.location)}
-                                                            className="flex items-center gap-1 text-[10px] font-bold text-ocean-600 bg-ocean-50 px-2 py-1 rounded-full active:bg-ocean-100"
-                                                        >
-                                                            <Navigation size={10} /> GOOGLE MAP
-                                                        </button>
-                                                    </div>
-                                                )}
-
-                                                {/* Edit Overlay Controls */}
-                                                {editMode && (
-                                                    <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white via-white to-transparent pl-4 flex items-center justify-end gap-1 pr-2 rounded-r-2xl">
-                                                        <div className="flex flex-col gap-1">
-                                                            <button 
-                                                                disabled={actIdx===0}
-                                                                onClick={() => moveItem(dayIdx, actIdx, -1)}
-                                                                className="p-1.5 bg-slate-100 text-slate-600 rounded-md disabled:opacity-30"
-                                                            ><ArrowUp size={14}/></button>
-                                                            <button 
-                                                                disabled={actIdx===day.activities.length-1}
-                                                                onClick={() => moveItem(dayIdx, actIdx, 1)}
-                                                                className="p-1.5 bg-slate-100 text-slate-600 rounded-md disabled:opacity-30"
-                                                            ><ArrowDown size={14}/></button>
-                                                        </div>
-                                                        <button 
-                                                            onClick={() => setEditingItem({dayIdx, actIdx, data: {...act}})}
-                                                            className="p-2 bg-ocean-100 text-ocean-600 rounded-full"
-                                                        >
-                                                            <Edit2 size={16}/>
-                                                        </button>
-                                                        <button 
-                                                            onClick={() => deleteItem(dayIdx, actIdx)}
-                                                            className="p-2 bg-rose-100 text-rose-500 rounded-full"
-                                                        >
-                                                            <Trash2 size={16}/>
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                    
-                                    <div className="h-20"></div> {/* Bottom Spacer */}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Floating Add Button */}
-                    <button 
-                        onClick={() => setEditingItem({dayIdx: activeDayIdx, actIdx: -1, data: {time:'12:00', title:'', type:'activity', location:''}})}
-                        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-ocean-500 to-ocean-400 text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-20 border-4 border-white/20"
-                    >
-                        <Plus size={28} />
-                    </button>
-
-                    {/* Edit/Add Modal */}
-                    {editingItem && (
-                        <Modal isOpen={true} onClose={() => setEditingItem(null)}>
-                            <div className="bg-ocean-500 p-4 text-white">
-                                <h3 className="text-lg font-bold">{editingItem.actIdx === -1 ? '新增行程' : '編輯行程'}</h3>
-                            </div>
-                            <div className="p-6 space-y-4">
-                                <div className="grid grid-cols-4 gap-4">
-                                    <div className="col-span-1">
-                                        <label className="text-xs font-bold text-gray-400">時間</label>
-                                        <input 
-                                            type="time" 
-                                            value={editingItem.data.time}
-                                            onChange={e => setEditingItem({...editingItem, data: {...editingItem.data, time: e.target.value}})}
-                                            className="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-2 text-center font-bold text-lg"
-                                        />
-                                    </div>
-                                    <div className="col-span-3">
-                                        <label className="text-xs font-bold text-gray-400">名稱</label>
-                                        <input 
-                                            type="text" 
-                                            value={editingItem.data.title}
-                                            onChange={e => setEditingItem({...editingItem, data: {...editingItem.data, title: e.target.value}})}
-                                            className="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-2.5 font-bold"
-                                            placeholder="行程名稱"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400 mb-1 block">類型</label>
-                                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                                        {['food','view','water','relax','boat','transport','hotel','activity'].map(type => (
-                                            <button
-                                                key={type}
-                                                onClick={() => setEditingItem({...editingItem, data: {...editingItem.data, type}})}
-                                                className={`p-2 rounded-lg border flex-shrink-0 ${editingItem.data.type === type ? 'bg-ocean-500 text-white border-ocean-500' : 'bg-white text-gray-400 border-gray-200'}`}
-                                            >
-                                                {React.cloneElement(getIcon(type), {size: 20})}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400">備註</label>
-                                    <textarea 
-                                        rows="2"
-                                        value={editingItem.data.note || ''}
-                                        onChange={e => setEditingItem({...editingItem, data: {...editingItem.data, note: e.target.value}})}
-                                        className="w-full mt-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm"
-                                        placeholder="詳細資訊..."
-                                    ></textarea>
-                                </div>
-
-                                <div>
-                                    <label className="text-xs font-bold text-gray-400">地點 (Google Map 關鍵字)</label>
-                                    <div className="relative">
-                                        <MapPin size={16} className="absolute left-3 top-3 text-gray-400"/>
-                                        <input 
-                                            type="text" 
-                                            value={editingItem.data.location || ''}
-                                            onChange={e => setEditingItem({...editingItem, data: {...editingItem.data, location: e.target.value}})}
-                                            className="w-full mt-1 pl-9 bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-sm"
-                                            placeholder="例如: Kayangan Lake"
-                                        />
-                                    </div>
-                                </div>
-
-                                <button 
-                                    onClick={() => saveItemEdit(editingItem.data)}
-                                    className="w-full py-3 mt-2 bg-ocean-500 hover:bg-ocean-600 text-white rounded-xl font-bold shadow-lg shadow-ocean-200/50 active:scale-95 transition-transform"
-                                >
-                                    儲存
+                        ${act.note ? `<p class="text-xs text-slate-500 pl-9 mb-2 line-clamp-2">${act.note}</p>` : ''}
+                        ${act.location ? `
+                            <div class="flex justify-end mt-1">
+                                <button onclick="event.stopPropagation(); openGoogleMap('${act.location}')" class="flex items-center gap-1 text-[10px] font-bold text-ocean-600 bg-ocean-50 px-2 py-1 rounded-full active:bg-ocean-100">
+                                    <i class="ph ph-navigation-arrow"></i> 導航
                                 </button>
                             </div>
-                        </Modal>
-                    )}
+                        ` : ''}
+                    </div>
                 </div>
-            );
-        };
+            `;
+        }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // --- 輔助功能 ---
+        function getTypeConfig(type) {
+            const map = {
+                food: { icon: 'ph-fork-knife', color: 'bg-orange-100 text-orange-600' },
+                view: { icon: 'ph-camera', color: 'bg-emerald-100 text-emerald-600' },
+                water: { icon: 'ph-waves', color: 'bg-cyan-100 text-cyan-600' },
+                hotel: { icon: 'ph-bed', color: 'bg-violet-100 text-violet-600' },
+                transport: { icon: 'ph-airplane-tilt', color: 'bg-slate-200 text-slate-600' },
+                boat: { icon: 'ph-anchor', color: 'bg-blue-100 text-blue-600' },
+                relax: { icon: 'ph-coffee', color: 'bg-rose-100 text-rose-600' },
+                activity: { icon: 'ph-music-notes', color: 'bg-yellow-100 text-yellow-600' }
+            };
+            return map[type] || { icon: 'ph-map-pin', color: 'bg-gray-100 text-gray-600' };
+        }
+
+        function scrollToDay(idx) {
+            activeDayIdx = idx;
+            const container = document.getElementById('main-container');
+            container.scrollTo({ left: container.offsetWidth * idx, behavior: 'smooth' });
+            updateTabs();
+            updateWeather();
+        }
+
+        function updateTabs() {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === activeDayIdx) {
+                    btn.className = 'tab-btn flex-1 min-w-[80px] py-2 rounded-xl transition-all flex flex-col items-center bg-white text-ocean-600 shadow-lg scale-100 opacity-100';
+                } else {
+                    btn.className = 'tab-btn flex-1 min-w-[80px] py-2 rounded-xl transition-all flex flex-col items-center bg-white/10 text-white scale-95 opacity-70';
+                }
+            });
+        }
+
+        function updateWeather() {
+            document.getElementById('weather-text').innerText = schedule[activeDayIdx].weather;
+        }
+
+        function startClock() {
+            const update = () => {
+                const now = new Date();
+                document.getElementById('clock').innerText = now.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12:false});
+            };
+            update();
+            setInterval(update, 10000);
+        }
+
+        function openGoogleMap(loc) {
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc + ' Coron Palawan')}`, '_blank');
+        }
+
+        // --- 編輯功能 ---
+        const types = ['food', 'view', 'water', 'relax', 'boat', 'transport', 'hotel', 'activity'];
+        
+        function openEditModal(dayIdx = activeDayIdx, actIdx = -1) {
+            const isNew = actIdx === -1;
+            const item = isNew ? { time: '12:00', title: '', type: 'food', note: '', location: '' } : schedule[dayIdx].activities[actIdx];
+            
+            document.getElementById('modal-title').innerText = isNew ? '新增行程' : '編輯行程';
+            document.getElementById('edit-day-idx').value = dayIdx;
+            document.getElementById('edit-act-idx').value = actIdx;
+            
+            document.getElementById('edit-time').value = item.time;
+            document.getElementById('edit-title').value = item.title;
+            document.getElementById('edit-note').value = item.note || '';
+            document.getElementById('edit-location').value = item.location || '';
+            document.getElementById('edit-type').value = item.type;
+
+            // Render Type Buttons
+            const typeContainer = document.getElementById('type-selector');
+            typeContainer.innerHTML = types.map(t => {
+                const cfg = getTypeConfig(t);
+                const isActive = item.type === t;
+                return `
+                    <button onclick="selectType('${t}')" class="type-btn p-2 rounded-lg border shrink-0 ${isActive ? 'bg-ocean-500 text-white border-ocean-500' : 'bg-white text-gray-400 border-gray-200'}" data-type="${t}">
+                        <i class="ph ${cfg.icon} text-xl"></i>
+                    </button>
+                `;
+            }).join('');
+
+            // Show Delete button if editing
+            document.getElementById('btn-delete').classList.toggle('hidden', isNew);
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function selectType(t) {
+            document.getElementById('edit-type').value = t;
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                if (btn.dataset.type === t) {
+                    btn.className = 'type-btn p-2 rounded-lg border shrink-0 bg-ocean-500 text-white border-ocean-500';
+                } else {
+                    btn.className = 'type-btn p-2 rounded-lg border shrink-0 bg-white text-gray-400 border-gray-200';
+                }
+            });
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        function saveItem() {
+            const dayIdx = parseInt(document.getElementById('edit-day-idx').value);
+            const actIdx = parseInt(document.getElementById('edit-act-idx').value);
+            
+            const newItem = {
+                time: document.getElementById('edit-time').value,
+                title: document.getElementById('edit-title').value || '未命名行程',
+                type: document.getElementById('edit-type').value,
+                note: document.getElementById('edit-note').value,
+                location: document.getElementById('edit-location').value
+            };
+
+            if (actIdx === -1) {
+                schedule[dayIdx].activities.push(newItem);
+                schedule[dayIdx].activities.sort((a, b) => a.time.localeCompare(b.time));
+            } else {
+                schedule[dayIdx].activities[actIdx] = newItem;
+            }
+
+            saveData();
+            renderDays();
+            closeEditModal();
+        }
+
+        function deleteCurrentItem() {
+            if (!confirm('確定刪除此行程？')) return;
+            const dayIdx = parseInt(document.getElementById('edit-day-idx').value);
+            const actIdx = parseInt(document.getElementById('edit-act-idx').value);
+            schedule[dayIdx].activities.splice(actIdx, 1);
+            saveData();
+            renderDays();
+            closeEditModal();
+        }
+
+        function saveData() {
+            localStorage.setItem('coron_lite_v1', JSON.stringify(schedule));
+        }
+
+        // Start
+        init();
+
     </script>
 </body>
 </html>
